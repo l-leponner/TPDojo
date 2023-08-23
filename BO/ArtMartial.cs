@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-    public class ArtMartial : DojoBaseAttributes
+    public class ArtMartial : Entite
     {
         public List<Samourai>? Samourais { get; set; }
     }

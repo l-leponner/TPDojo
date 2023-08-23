@@ -87,6 +87,8 @@ namespace TPDojo.Controllers
         // GET: Samourais/Create
         public IActionResult Create([FromServices] DojoContext dojoContext)
         {
+            //List<int> idsArmesEquipees = dojoContext.Samourais.Where(s => s.Arme.Val).Select(s => s.Arme.Id).ToList();
+            //IQueryable<Arme> armesDisponibles = dojoContext.Armes.Where(!idsArmesEquipees.Contains())
             SamouraisVM samouraisVM = new SamouraisVM();
             samouraisVM.SelectArmes = new SelectList(dojoContext.Armes.ToList(), "Id", "Nom");
             samouraisVM.SelectArtsMartiaux = new MultiSelectList(dojoContext.ArtsMartiaux.ToList(), "Id", "Nom");

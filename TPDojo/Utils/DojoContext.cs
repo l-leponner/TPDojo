@@ -25,6 +25,7 @@ namespace TPDojo.Utils
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Samourai>().HasMany(s => s.ArtsMartiaux).WithMany(a => a.Samourais);
+            //modelBuilder.Entity<Samourai>().HasIndex(s => s.Arme.Id).IsUnique();
             int id = 100;
             Random r = new Random();
             

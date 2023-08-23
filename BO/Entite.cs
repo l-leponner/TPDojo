@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-    public abstract class DojoBaseAttributes
+    public abstract class Entite
     {
         public int Id { get; set; }
-        public string Nom { get; set; }
+        public string? Nom { get; set; }
     }
 }
