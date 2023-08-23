@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-    public class Samourai
+    public class Samourai : DojoBaseAttributes
     {
-        public int Id { get; set; }
-        public string Nom { get; set; }
         public int Force { get; set; }
         
         public Arme? Arme { get; set; }
+
+        public List<ArtMartial>? ArtsMartiaux { get; set; }
     }
 }

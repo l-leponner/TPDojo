@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPDojo.Utils;
 
@@ -11,9 +12,11 @@ using TPDojo.Utils;
 namespace TPDojo.Migrations
 {
     [DbContext(typeof(DojoContext))]
-    partial class DojoContextModelSnapshot : ModelSnapshot
+    [Migration("20230823092205_ArtsMartiaux")]
+    partial class ArtsMartiaux
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

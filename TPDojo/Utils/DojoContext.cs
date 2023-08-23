@@ -1,5 +1,6 @@
 ﻿using BO;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace TPDojo.Utils
 {
@@ -15,6 +16,7 @@ namespace TPDojo.Utils
 
         public DbSet<Samourai> Samourais { get; set; }
         public DbSet<Arme> Armes { get; set; }
+        public DbSet<ArtMartial> ArtsMartiaux { get; set; }
 
         public bool IsWeaponAssignedToSamurai(int weaponId)
         {
@@ -22,6 +24,7 @@ namespace TPDojo.Utils
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Samourai>().HasMany(s => s.ArtsMartiaux).WithMany(a => a.Samourais);
             int id = 100;
             Random r = new Random();
             

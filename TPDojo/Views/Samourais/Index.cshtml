@@ -1,4 +1,5 @@
-﻿@using TPDojo.Utils
+﻿@using BO
+@using TPDojo.Utils
 @model PaginatedList<BO.Samourai>
 
 @{
@@ -33,34 +34,53 @@
             <th>
                 Arme
             </th>
+            <th>
+                Arts Martiaux
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var samourai in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nom)
+                    @Html.DisplayFor(modelItem => samourai.Nom)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Force)
+                    @Html.DisplayFor(modelItem => samourai.Force)
                 </td>
                 <td>
-                    @if (item.Arme == null)
+                    @if (samourai.Arme == null)
                     {
-                        @Html.DisplayFor(model => item.Arme!.Nom)
+                        @*@Html.DisplayFor(model => samourai.Arme!.Nom)*@
+                        <p>Pas d'arme</p>
                     }
                     else
                     {
                         //linkText, actionName, controllerName, routeValues, htmlAttributes
-                        @Html.ActionLink(item.Arme!.Nom, "Details", "Armes", new {id = item.Arme!.Id}, null)
+                        @Html.ActionLink(samourai.Arme!.Nom, "Details", "Armes", new {id = samourai.Arme!.Id}, null)
                     }
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @if (samourai.ArtsMartiaux == null)
+                    {
+                        <p>Pas d'arts martiaux pratiqués</p>
+                    } else {
+
+                    }
+                    @foreach (ArtMartial artMartial in samourai.ArtsMartiaux)
+                    {
+                                //linkText, actionName, controllerName, routeValues, htmlAttributes
+                        @Html.ActionLink(artMartial.Nom, "Details", "ArtsMartiaux", new {id = artMartial.Id}, null)
+                    }
+                   
+                    
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@samourai.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@samourai.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@samourai.Id">Delete</a>
                 </td>
             </tr>
         }

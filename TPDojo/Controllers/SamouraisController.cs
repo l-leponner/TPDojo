@@ -35,7 +35,7 @@ namespace TPDojo.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            var samourais = dojoContext.Samourais.Include(s => s.Arme).Select(s => s);
+            var samourais = dojoContext.Samourais.Include(s => s.Arme).Include(s => s.ArtsMartiaux).Select(s => s);
                 //from s in dojoContext.Samourais
                 //            join a in dojoContext.Armes on s.Arme.Id equals a.Id
                 //            select s;
@@ -75,7 +75,7 @@ namespace TPDojo.Controllers
                 return NotFound();
             }
 
-            var samourai = await dojoContext.Samourais.Include(s => s.Arme).SingleAsync(s => s.Id == id);
+            var samourai = await dojoContext.Samourais.Include(s => s.Arme).Include(s => s.ArtsMartiaux).SingleAsync(s => s.Id == id);
             if (samourai == null)
             {
                 return NotFound();
@@ -89,6 +89,7 @@ namespace TPDojo.Controllers
         {
             SamouraisVM samouraisVM = new SamouraisVM();
             samouraisVM.SelectArmes = new SelectList(dojoContext.Armes.ToList(), "Id", "Nom");
+            samouraisVM.SelectArtsMartiaux = new MultiSelectList(dojoContext.ArtsMartiaux.ToList(), "Id", "Nom");
             return View(samouraisVM);
         }
 
@@ -111,7 +112,8 @@ namespace TPDojo.Controllers
                 {
                     Nom = samouraisVM.Nom,
                     Force = samouraisVM.Force,
-                    Arme = (samouraisVM.ArmeId == null) ? null : dojoContext.Armes.Find(samouraisVM.ArmeId)
+                    Arme = (samouraisVM.ArmeId == null) ? null : dojoContext.Armes.Find(samouraisVM.ArmeId),
+                    ArtsMartiaux = (samouraisVM.ArtsMartiauxIds == null) ? null : dojoContext.ArtsMartiaux.Where(a => samouraisVM.ArtsMartiauxIds.Contains(a.Id)).ToList()
                 };
                 await dojoContext.Samourais.AddAsync(samourai);
                 await dojoContext.SaveChangesAsync();
@@ -135,10 +137,12 @@ namespace TPDojo.Controllers
             }
             SamouraisVM samouraisVM = new SamouraisVM();
             samouraisVM.SelectArmes = new SelectList(dojoContext.Armes.ToList(), "Id", "Nom");
+            samouraisVM.SelectArtsMartiaux = new MultiSelectList(dojoContext.ArtsMartiaux.ToList(), "Id", "Nom");
             samouraisVM.Id = samourai.Id;
             samouraisVM.Nom = samourai.Nom;
             samouraisVM.Force = samourai.Force;
             samouraisVM.ArmeId = (samourai.Arme == null) ? null : samourai.Arme.Id;
+            samouraisVM.ArtsMartiauxIds = samourai.ArtsMartiaux!.Select(a => a.Id).ToList();
 
             return View(samouraisVM);
         }
@@ -174,6 +178,7 @@ namespace TPDojo.Controllers
                         samourai.Nom = samouraisVM.Nom;
                         samourai.Force = samouraisVM.Force;
                         samourai.Arme = (samouraisVM.ArmeId == null) ? null : dojoContext.Armes.Find(samouraisVM.ArmeId);
+                        samourai.ArtsMartiaux = (samouraisVM.ArtsMartiauxIds == null) ? null : dojoContext.ArtsMartiaux.Where(a => samouraisVM.ArtsMartiauxIds.Contains(a.Id)).ToList();
                         dojoContext.Update(samourai);
                         await dojoContext.SaveChangesAsync();
                         return RedirectToAction(nameof(Index));
@@ -203,7 +208,7 @@ namespace TPDojo.Controllers
                 return NotFound();
             }
 
-            var samourai = await dojoContext.Samourais.Include(s => s.Arme).SingleAsync(s => s.Id == id);
+            var samourai = await dojoContext.Samourais.Include(s => s.Arme).Include(s => s.ArtsMartiaux).SingleAsync(s => s.Id == id);
             if (samourai == null)
             {
                 return NotFound();

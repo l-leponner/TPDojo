@@ -133,7 +133,9 @@ namespace TPDojo.Controllers
                 
                 if (context.IsWeaponAssignedToSamurai(arme.Id))
                 {
-                    throw new Exception("Cette arme est assignée à un samouraï. Impossible de la supprimer.");
+                    Samourai? samourai = context.Samourais.Where(s => s.Arme.Id == arme.Id).SingleOrDefault();
+                    Samourai porteur = samourai;
+                    throw new Exception($"Cette arme est assignée à un samouraï : {porteur.Nom}. Impossible de la supprimer.");
                 }
                 context.Armes.Remove(arme);
                 context.SaveChanges();
