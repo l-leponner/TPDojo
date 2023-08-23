@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPDojo", "TPDojo\TPDojo.csproj", "{D9C72ED7-76B2-415D-9F39-05947991CDF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TPDojo", "TPDojo\TPDojo.csproj", "{D9C72ED7-76B2-415D-9F39-05947991CDF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BO", "BO\BO.csproj", "{C60E8AC4-254E-455B-B885-A89EF3BAD893}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BO", "BO\BO.csproj", "{C60E8AC4-254E-455B-B885-A89EF3BAD893}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPDojoAPI", "TPDojoAPI\TPDojoAPI.csproj", "{128861D5-5350-42BE-ACF2-78D053192FEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C60E8AC4-254E-455B-B885-A89EF3BAD893}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C60E8AC4-254E-455B-B885-A89EF3BAD893}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C60E8AC4-254E-455B-B885-A89EF3BAD893}.Release|Any CPU.Build.0 = Release|Any CPU
+		{128861D5-5350-42BE-ACF2-78D053192FEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{128861D5-5350-42BE-ACF2-78D053192FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{128861D5-5350-42BE-ACF2-78D053192FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{128861D5-5350-42BE-ACF2-78D053192FEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
