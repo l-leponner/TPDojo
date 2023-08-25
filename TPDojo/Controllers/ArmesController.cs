@@ -1,5 +1,7 @@
 ﻿using BO;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text.Json;
 using TPDojo.Utils;
 
 namespace TPDojo.Controllers
@@ -13,25 +15,56 @@ namespace TPDojo.Controllers
         //    dojoContext = context;
         //}
 
-
+        static DojoAPIConnection apiConnection = new DojoAPIConnection();
 
         // GET: ArmesController
-        public ActionResult Index([FromServices] DojoContext dojoContext)
+        public async Task<ActionResult> Index()
         {
-            List<Arme> armes = dojoContext.Armes.ToList();
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(apiConnection.BASE_ADRESS);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-            return View(armes);
+                var response = await httpClient.GetAsync("api/Armes");
+
+                if(!response.IsSuccessStatusCode)
+                {
+                    return NotFound();
+                } else
+                {
+                    //Task? receivedTask = await response.Content.ReadFromJsonAsync<Task>();
+                    
+                    IEnumerable<Arme>? armes;
+                         armes = await response.Content.ReadFromJsonAsync<IList<Arme>>();
+                    return View(armes);
+                }
+            }
         }
 
         // GET: ArmesController/Details/5
-        public ActionResult Details([FromServices] DojoContext context, int id)
+        public async Task<ActionResult> DetailsAsync(int id)
         {
-            Arme? arme = GetArme(id, context);
-            if (arme is null)
+            using (var httpClient = new HttpClient())
             {
-                return NotFound();
+                httpClient.BaseAddress = new Uri(apiConnection.BASE_ADRESS);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await httpClient.GetAsync($"api/Armes/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Arme? arme;
+                    arme = await response.Content.ReadFromJsonAsync<Arme>();
+                    return View(arme);
+                }
             }
-            return View(arme);
+            
         }
 
         // GET: ArmesController/Create
@@ -43,36 +76,54 @@ namespace TPDojo.Controllers
         // POST: ArmesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromServices] DojoContext context, Arme arme)
+        public async Task<ActionResult> CreateAsync(Arme arme)
         {
-            try
+            using (var httpClient = new HttpClient())
             {
-                if (!ModelState.IsValid)
+                httpClient.BaseAddress = new Uri(apiConnection.BASE_ADRESS);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+              
+
+                var response = await httpClient.PostAsJsonAsync("api/Armes", arme);
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return View();
                 }
                 else
                 {
-                    context.Armes.Add(new Arme
-                    {
-                        Nom = arme.Nom,
-                        Degats = arme.Degats,
-                    });
-                    context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
+            }
+            //try
+            //{
+            //    if (!ModelState.IsValid)
+            //    {
+            //        return RedirectToAction(nameof(IndexAsync));
+            //    }
+            //    else
+            //    {
+            //        context.Armes.Add(new Arme
+            //        {
+            //            Nom = arme.Nom,
+            //            Degats = arme.Degats,
+            //        });
+            //        context.SaveChanges();
+            //        return RedirectToAction(nameof(IndexAsync));
+            //    }
 
-            }
-            catch
-            {
-                return View();
-            }
+            //}
+            //catch
+            //{
+            //    return View();
+            //}
         }
 
         // GET: ArmesController/Edit/5
-        public ActionResult Edit([FromServices] DojoContext context, int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
-            Arme? arme = GetArme(id, context);
+            Arme? arme = await GetArmeAsync(id);
             if (arme is null)
             {
                 return NotFound();
@@ -83,34 +134,52 @@ namespace TPDojo.Controllers
         // POST: ArmesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromServices] DojoContext context, int id, Arme arme)
+        public async Task<ActionResult> EditAsync(int id, Arme arme)
         {
-            try
+            using (var httpClient = new HttpClient())
             {
-                if (!ModelState.IsValid)
+                httpClient.BaseAddress = new Uri(apiConnection.BASE_ADRESS);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                var response = await httpClient.PutAsJsonAsync($"api/Armes/{id}", arme);
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return View();
                 }
                 else
                 {
-                    Arme? armeToEdit = GetArme(id, context);
-                    armeToEdit!.Nom = arme.Nom;
-                    armeToEdit.Degats = arme.Degats;
-                    context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
+            }
+            //try
+            //{
+            //    if (!ModelState.IsValid)
+            //    {
+            //        return RedirectToAction(nameof(Index));
+            //    }
+            //    else
+            //    {
+            //        Arme? armeToEdit = GetArme(id, context);
+            //        armeToEdit!.Nom = arme.Nom;
+            //        armeToEdit.Degats = arme.Degats;
+            //        context.SaveChanges();
+            //        return RedirectToAction(nameof(Index));
+            //    }
 
-            }
-            catch
-            {
-                return View();
-            }
+            //}
+            //catch
+            //{
+            //    return View();
+            //}
         }
 
         // GET: ArmesController/Delete/5
-        public ActionResult Delete([FromServices] DojoContext context, int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            Arme? arme = GetArme(id, context);
+            Arme? arme = await GetArmeAsync(id);
             if (arme is null)
             {
                 return NotFound();
@@ -121,37 +190,72 @@ namespace TPDojo.Controllers
         // POST: ArmesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, [FromServices] DojoContext context)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            Arme? arme = GetArme(id, context);
-            if (arme is null)
+            using (var httpClient = new HttpClient())
             {
-                return NotFound();
-            }
-            try
-            {
-                
-                if (context.IsWeaponAssignedToSamurai(arme.Id))
+                httpClient.BaseAddress = new Uri(apiConnection.BASE_ADRESS);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                var response = await httpClient.DeleteAsync($"api/Armes/{id}");
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    Samourai? samourai = context.Samourais.Where(s => s.Arme.Id == arme.Id).SingleOrDefault();
-                    Samourai porteur = samourai;
-                    throw new Exception($"Cette arme est assignée à un samouraï : {porteur.Nom}. Impossible de la supprimer.");
+                    return View();
                 }
-                context.Armes.Remove(arme);
-                context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View(arme);
-            }
+            //Arme? arme = GetArme(id, context);
+            //if (arme is null)
+            //{
+            //    return NotFound();
+            //}
+            //try
+            //{
+
+            //    if (context.IsWeaponAssignedToSamurai(arme.Id))
+            //    {
+            //        Samourai? samourai = context.Samourais.Where(s => s.Arme.Id == arme.Id).SingleOrDefault();
+            //        Samourai porteur = samourai;
+            //        throw new Exception($"Cette arme est assignée à un samouraï : {porteur.Nom}. Impossible de la supprimer.");
+            //    }
+            //    context.Armes.Remove(arme);
+            //    context.SaveChanges();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //catch (Exception ex)
+            //{
+            //    ModelState.AddModelError("", ex.Message);
+            //    return View(arme);
+            //}
         }
 
-        public static Arme? GetArme(int id, [FromServices] DojoContext context)
+        public static async Task<Arme?> GetArmeAsync(int id)
         {
-            Arme? arme = context.Armes.Find(id);
-            return arme;
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(apiConnection.BASE_ADRESS);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await httpClient.GetAsync($"api/Armes/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                else
+                {
+                    Arme? arme;
+                    arme = await response.Content.ReadFromJsonAsync<Arme>();
+                    return arme;
+                }
+            }
         }
     }
 }
